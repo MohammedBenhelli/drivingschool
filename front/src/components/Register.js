@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useHistory} from "react-router-dom";
 import {Button, Form} from "react-bootstrap";
 
@@ -7,6 +7,10 @@ const Register = () => {
     const [form, setForm] = useState({});
     const [error, setError] = useState(false);
     const history = useHistory();
+
+    useEffect(() => {
+        if(localStorage.getItem('token')) history.push('studentHome');
+    }, []);
 
     const submitForm = async () => {
         setError(false);

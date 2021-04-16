@@ -3,6 +3,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
+from django.contrib.auth import authenticate
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import get_user_model
@@ -27,7 +28,7 @@ def get_authenticated_user(request) -> get_user_model():
 def register(request):
     email = request.data.get('email')
     first_name = request.data.get('first_name').lower().capitalize()
-    password = request.data.get('last_name').lower().capitalize()
+    password = request.data.get('password')
     last_name = request.data.get('last_name').lower().capitalize()
     serialized = UserSerializer(data={
         "username": email,
@@ -49,11 +50,14 @@ def register(request):
 
 @api_view(['POST'])
 def login(request):
-    serializer = AuthTokenSerializer(data=request.data, context={'request': request})
-    serializer.is_valid(raise_exception=True)
-    user = serializer.validated_data['user']
+    print(request.data.get('username'),request.data.get('password'))
+    user = authenticate(username=request.data.get('username'), password=request.data.get('password'))
+    if user is None:
+        return Response('Error', status=status.HTTP_401_UNAUTHORIZED)
+    print(user)
+    account = Account.objects.get(user=user)
     token, created = Token.objects.get_or_create(user=user)
-    return Response({'token': token.key, "user": UserSerializer(user).data})
+    return Response({'token': token.key, "account": AccountSerializer(account).data})
 
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication,))

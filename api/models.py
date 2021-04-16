@@ -22,8 +22,8 @@ class Account(models.Model):
         return self.user.first_name + ' ' + self.user.last_name
 
 class Appointment(models.Model):
-    student = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='student')
+    student = models.OneToOneField(Account, on_delete=models.CASCADE, default=None, related_name='student')
     hour = models.DateTimeField()
     lieux = models.CharField(max_length=50)
     date = models.DateField()
-    instructor = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='instructor')
+    instructor = models.OneToOneField(Account, on_delete=models.CASCADE, default=None, related_name='instructor')

@@ -52,39 +52,8 @@ const StudentHome = () => {
                 </Card.Body>
             </Card>)}
             {data.appointments.length === 0 && <h2 className={'text-info'}>No appointments !</h2>}
-            {/*    "id": 1,*/}
-            {/*    "student": {*/}
-            {/*    "id": 2,*/}
-            {/*    "user": {*/}
-            {/*    "username": "joe@student.fr",*/}
-            {/*    "email": "joe@student.fr",*/}
-            {/*    "first_name": "Joe",*/}
-            {/*    "last_name": "Student"*/}
-            {/*},*/}
-            {/*    "role": "Student",*/}
-            {/*    "hours_left": 0,*/}
-            {/*    "hours_done": 0*/}
-            {/*},*/}
-            {/*    "instructor": {*/}
-            {/*    "id": 1,*/}
-            {/*    "user": {*/}
-            {/*    "username": "test@teest.fr",*/}
-            {/*    "email": "test@teest.fr",*/}
-            {/*    "first_name": "Test",*/}
-            {/*    "last_name": "Test"*/}
-            {/*},*/}
-            {/*    "role": "Instructor",*/}
-            {/*    "hours_left": 0,*/}
-            {/*    "hours_done": 0*/}
-            {/*},*/}
-            {/*    "hour": "2021-04-16T14:29:03Z",*/}
-            {/*    "lieux": "oui",*/}
-            {/*    "date": "2021-04-16"*/}
-            {/*}*/}
-            {/*    ]*/}
-            {/*}*/}
         </>}
     </>);
 }
 
-export default StudentHome
+export default StudentHome;
