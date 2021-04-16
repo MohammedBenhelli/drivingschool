@@ -3,11 +3,26 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.authentication import TokenAuthentication
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from api.models import Appointment, Account
 from api.serializers import AccountSerializer, AppointmentSerializer, UserSerializer
 
 # Create your views here.
+def get_authenticated_user(request) -> get_user_model():
+    headers = request.headers
+    auth = headers.get('Authorization')
+    if auth is not None:
+        if auth.startswith('Token '):
+            token = auth[6:]
+            return Token.objects.get(key=token).user
+        else:
+            raise ValueError('Unknown authentication method')
+    else:
+        raise ValueError('no authentication found')
+
 @api_view(['POST'])
 def register(request):
     email = request.data.get('email')
@@ -31,3 +46,22 @@ def register(request):
         return Response({'token': token.key, 'account': AccountSerializer(account).data}, status=status.HTTP_201_CREATED)
     else :
         return Response(serialized.errors, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def login(request):
+    serializer = AuthTokenSerializer(data=request.data, context={'request': request})
+    serializer.is_valid(raise_exception=True)
+    user = serializer.validated_data['user']
+    token, created = Token.objects.get_or_create(user=user)
+    return Response({'token': token.key, "user": UserSerializer(user).data})
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+def student_info(request):
+    user = get_authenticated_user(request)
+    account = Account.objects.get(user=user)
+    if account.role == 'Student':
+        appointments = Appointment.objects.filter(student=account)
+        return Response({"student": AccountSerializer(account).data, "appointments": AppointmentSerializer(appointments, many=True).data}, status=status.HTTP_200_OK)
+    else:
+        return Response('Error', status=status.HTTP_401_UNAUTHORIZED)

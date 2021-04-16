@@ -15,6 +15,8 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AppointmentSerializer(serializers.ModelSerializer):
+    student = AccountSerializer()
+    instructor = AccountSerializer()
     class Meta:
         model = Appointment
         fields = '__all__'

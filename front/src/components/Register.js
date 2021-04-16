@@ -21,6 +21,11 @@ const Register = () => {
             });
             console.log(res);
             const resJSON = await res.json();
+            if(resJSON.token){
+                localStorage.setItem('token', resJSON.token);
+                localStorage.setItem('role', resJSON.account.role);
+                history.push('studentHome')
+            }
             console.log(resJSON);
         } else {
             setError(true);

@@ -15,7 +15,8 @@ class Account(models.Model):
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
     role = models.CharField(max_length=50, choices=ROLE, default=STUDENT)
-    hours = models.PositiveSmallIntegerField(default=0)
+    hours_left = models.PositiveSmallIntegerField(default=0)
+    hours_done = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
